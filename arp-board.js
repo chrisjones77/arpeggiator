@@ -24,23 +24,19 @@ proto.create = function() {
   }
 
   this.parent.appendChild( this.element );
-  this.element.addEventListener( 'change', this );
+  this.element.addEventListener( 'click', this );
 };
 
 proto.createColumn = function( columnIndex ) {
   var column = document.createElement('div');
   column.className = getBEMClass( 'column', columnIndex );
+  column.setAttribute( 'data-column', columnIndex );
   // create radios
   for ( var i=7; i > -5; i-- ) {
     var cell = document.createElement('div');
     var value = i == -4 ? 'rest' : i;
     cell.className = getBEMClass( 'cell', value );
-    var radio = document.createElement('input');
-    radio.type = 'radio';
-    radio.value = value;
-    radio.name = arpBoardClass + this.id + '-' + columnIndex;
-    radio.setAttribute( 'data-column', columnIndex );
-    cell.appendChild( radio );
+    cell.setAttribute( 'data-value', value );
     column.appendChild( cell );
   }
   return column;
@@ -62,23 +58,31 @@ proto.handleEvent = function( event ) {
   }
 };
 
-proto.onchange = function( event ) {
-  var column = event.target.getAttribute('data-column');
-  var value = event.target.value;
-  this.arpeggio[ column ] = value == 'rest' ? value : parseInt( value, 10 );
+proto.onclick = function( event ) {
+  // only
+  if ( !event.target.classList.contains('arp-board__cell') ) {
+    return;
+  }
+  var colIndex = parseInt( event.target.parentNode.getAttribute('data-column'), 10 );
+  var value = event.target.getAttribute('data-value');
+  value = value == 'rest' ? value : parseInt( value, 10 );
+  this.setSelectedCell( colIndex, value );
+  this.arpeggio[ colIndex ] = value;
 };
 
 proto.setArpeggio = function( arp ) {
   this.arpeggio = arp;
-  var _this = this;
   this.arpeggio.forEach( function( noteIndex, i ) {
-    var column = _this.columns[i];
-    var offRadio = column.querySelector('[checked]');
-    var onClass = '.' + arpBoardClass + '__cell--' + noteIndex + ' input';
-    var onRadio = column.querySelector( onClass );
-    if ( offRadio ) {
-      offRadio.removeAttribute('checked');
-    }
-    onRadio.setAttribute( 'checked', 'checked' );
-  });
+    this.setSelectedCell( i, noteIndex );
+  }, this );
+};
+
+proto.setSelectedCell = function( colIndex, value ) {
+  var column = this.columns[ colIndex ];
+  var offCell = column.querySelector('.is-selected');
+  var onCell = column.querySelector( '.' + arpBoardClass + '__cell--' + value );
+  if ( offCell ) {
+    offCell.classList.remove('is-selected');
+  }
+  onCell.classList.add('is-selected');
 };
