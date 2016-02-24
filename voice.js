@@ -23,8 +23,6 @@ proto.octaveOffset = 0;
 proto.type = 'triangle';
 proto.volume = 1;
 proto.detune = 0;
-proto.attackTime = 1.0;
-proto.releaseTime = 1.0;
 
 proto.createKeyboardKeys = function() {
   // keys that aren't playing

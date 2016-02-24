@@ -5,31 +5,22 @@ var AudioCtx = window.AudioContext || window.webkitAudioContext;
 // -----  ----- //
 
 function Instrument() {
-  this.bpm = 120;
-  this.hold = 1;
   this.voices = [];
   document.addEventListener( 'keydown', this );
   document.addEventListener( 'keyup', this );
   this.audio = new AudioCtx();
-  // defaults
-  this.attackTime = 0;
-  this.releaseTime = 0;
   // output
   this.output = this.audio.createGain();
   this.output.gain.value = 1;
   // destination
   this.destination = this.audio.destination;
-  // this.output.connect( this.audio.destination );
+
   this.startBeats();
   // hash of down notes
   this.downNotes = {};
 }
 
 var proto = Instrument.prototype;
-
-// -----  ----- //
-
-
 
 // ----- events ----- //
 
@@ -97,35 +88,10 @@ function changeKeyElemDown( keyCode, method ) {
 // shape, volume, detune, octave offset
 proto.addVoice = function( options ) {
   options = options || {};
-  options.attackTime = this.attackTime;
-  options.releaseTime = this.releaseTime;
   var voice = new Voice( this.audio, options, this );
   voice.output.connect( this.output );
   this.voices.push( voice );
 };
-
-// ----- attackTime & releaseTime ----- //
-
-// set values on voices
-[
-  'attackTime',
-  'releaseTime',
-  'beatTime',
-].forEach( function( prop ) {
-  var _prop = '_' + prop;
-
-  Object.defineProperty( proto, prop, {
-    get: function() {
-      return this[ _prop ];
-    },
-    set: function( value ) {
-      this[ _prop ] = value;
-      this.voices.forEach( function( voice ) {
-        voice[ prop ] = value;
-      });
-    }
-  });
-});
 
 // ----- beats ----- //
 
@@ -138,9 +104,8 @@ proto.startBeats = function() {
 proto.animate = function() {
   var now = new Date();
   var time = now - this.lastBeat;
-  this.beatTime = ( 60 * 1000 / ( this.bpm * 2 ) );
   // upbeat
-  if ( !this.didUpBeat && time >= this.beatTime * this.hold ) {
+  if ( !this.didUpBeat && time >= settings.beatTime * settings.holdTime ) {
     this.voices.forEach( function( voice ) {
       voice.onUpBeat();
     });
@@ -160,7 +125,7 @@ proto.animate = function() {
 };
 
 proto.onBeat = function( time, now ) {
-  if ( time < this.beatTime ) {
+  if ( time < settings.beatTime ) {
     return;
   }
   var _this = this;
@@ -186,8 +151,8 @@ proto.addPlayingClasses = function() {
     }
   }
 
-  var activeCol = this.beat % arpBoard0.arpeggio.length;
-  var inactiveCol = modulo( this.beat - 1, arpBoard0.arpeggio.length );
+  var activeCol = this.beat % arp.length;
+  var inactiveCol = modulo( this.beat - 1, arp.length );
   arpBoard0.element.children[ activeCol ].classList.add('is-playing');
   arpBoard0.element.children[ inactiveCol ].classList.remove('is-playing');
 };

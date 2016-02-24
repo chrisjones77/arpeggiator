@@ -1,4 +1,13 @@
-/* globals Instrument */
+/* globals Instrument, ArpBoard */
+
+// -------------------------- arp boards -------------------------- //
+
+var arpContainer = document.querySelector('.arp-container');
+var arpBoard0 = new ArpBoard( arpContainer );
+
+arpBoard0.setArpeggio([0,4,7,0,4,7,0,7]);
+
+// -------------------------- synth -------------------------- //
 
 var synth = new Instrument();
 
@@ -29,7 +38,7 @@ end.connect( synth.destination );
 
 var attackRange = document.querySelector('.attack-range');
 var onAttackRangeInput = attackRange.oninput = function() {
-  synth.attackTime = parseFloat( attackRange.value );
+  settings.attackTime = parseFloat( attackRange.value );
 };
 
 onAttackRangeInput();
@@ -37,7 +46,7 @@ onAttackRangeInput();
 var releaseRange = document.querySelector('.release-range');
 var onReleaseRangeInput = releaseRange.oninput = function() {
   var value = parseFloat( releaseRange.value );
-  synth.releaseTime = value * value * 3;
+  settings.releaseTime = value * value * 2; // parabolic 2 seconds
 };
 
 onReleaseRangeInput();
@@ -52,13 +61,14 @@ onFilterFreqRangeInput();
 
 var bpmRange = document.querySelector('.bpm-range');
 var onBpmRangeInput = bpmRange.oninput = function() {
-  synth.bpm = parseInt( bpmRange.value, 10 );
+  var bpm = parseInt( bpmRange.value, 10 );
+  settings.beatTime = 60 * 1000 / ( bpm * 2 );
 };
 onBpmRangeInput();
 
 var holdRange = document.querySelector('.hold-range');
 var onHoldRangeInput = holdRange.oninput = function() {
-  synth.hold = parseFloat( holdRange.value );
+  settings.holdTime = parseFloat( holdRange.value );
 };
 onHoldRangeInput();
 
@@ -66,14 +76,9 @@ var shapeSelect = document.querySelector('.shape-select');
 var onShapeSelectChange = shapeSelect.onchange = function() {
   synth.voices[0].setType( shapeSelect.value );
   synth.voices[1].setType( shapeSelect.value );
-}
+};
 
-// -------------------------- arp boards -------------------------- //
-
-var arpContainer = document.querySelector('.arp-container');
-var arpBoard0 = new ArpBoard( arpContainer );
-
-arpBoard0.setArpeggio([0,4,7,0,4,7,0,7]);
+onShapeSelectChange();
 
 // -------------------------- visualizer -------------------------- //
 

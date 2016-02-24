@@ -30,13 +30,12 @@ var proto = Tone.prototype;
 
 proto.play = function() {
   // attack time per beat
-  var voice = this.keyboardKey.voice;
-  var attack = voice.attackTime * voice.beatTime / 1000;
+  var attack = settings.attackTime * settings.beatTime / 1000;
   this.rampGain( 1, attack );
 };
 
 proto.stop = function() {
-  this.rampGain( 0, this.keyboardKey.voice.releaseTime );
+  this.rampGain( 0, settings.releaseTime );
 };
 
 // ----- rampGain ----- //
