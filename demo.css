@@ -91,6 +91,11 @@ body {
 .arp-board__cell.is-selected { background: #8AF; }
 .arp-board__column.is-playing .arp-board__cell.is-selected { background: #FD0; }
 
+.arp-board__cell:hover {
+  background: #5E8;
+  cursor: pointer;
+}
+
 /* ---- range-table ---- */
 
 .option-table {
