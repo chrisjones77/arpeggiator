@@ -153,8 +153,8 @@ proto.addPlayingClasses = function() {
 
   var activeCol = this.beat % arp.length;
   var inactiveCol = modulo( this.beat - 1, arp.length );
-  arpBoard0.element.children[ activeCol ].classList.add('is-playing');
-  arpBoard0.element.children[ inactiveCol ].classList.remove('is-playing');
+  arpBoard0.columns[ activeCol ].classList.add('is-playing');
+  arpBoard0.columns[ inactiveCol ].classList.remove('is-playing');
 };
 
 // ----- filter ----- //

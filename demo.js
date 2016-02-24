@@ -1,9 +1,31 @@
-/* globals Instrument, ArpBoard */
+/* globals Instrument, ArpBoard, ArpButton */
+
+// -------------------------- arp buttons -------------------------- //
+
+var defaultArps = [
+  [0,4,7,0,4,7,0,7],
+  [0,2,4,6,7,6,4,2],
+  [0,0,7,7,0,0,7,7],
+  [0,2,0,4,0,2,0,7],
+  [0,3,5,7,3,0,5,7],
+  [7,6,4,1,7,6,4,1],
+  [0,-2,0,-2,0,4,0,4],
+  [0,1,0,2,0,-1,0,4],
+];
+
+var arpButtonList = document.querySelector('.arp-button-list');
+
+var arpButtons = [];
+
+defaultArps.forEach( function( arp ) {
+  var arpButton = new ArpButton( arpButtonList, arp );
+  arpButtons.push( arpButton );
+})
 
 // -------------------------- arp boards -------------------------- //
 
-var arpContainer = document.querySelector('.arp-container');
-var arpBoard0 = new ArpBoard( arpContainer );
+var arpBoardContainer = document.querySelector('.arp-board-container');
+var arpBoard0 = new ArpBoard( arpBoardContainer );
 
 arpBoard0.setArpeggio([0,4,7,0,4,7,0,7]);
 
@@ -82,10 +104,10 @@ onShapeSelectChange();
 
 // -------------------------- visualizer -------------------------- //
 
-var canvas = document.querySelector('canvas');
-var canvasWidth = canvas.width = window.innerWidth - 20;
-var canvasHeight = canvas.height = 200;
-var ctx = canvas.getContext('2d');
+var vizCanvas = document.querySelector('.viz-canvas');
+var canvasWidth = vizCanvas.width = window.innerWidth - 20;
+var canvasHeight = vizCanvas.height = 200;
+var ctx = vizCanvas.getContext('2d');
 
 var analyzer = synth.audio.createAnalyser();
 end.connect( analyzer );
