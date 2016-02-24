@@ -22,12 +22,13 @@ defaultArps.forEach( function( arp ) {
   arpButtons.push( arpButton );
 })
 
+
 // -------------------------- arp boards -------------------------- //
 
 var arpBoardContainer = document.querySelector('.arp-board-container');
 var arpBoard0 = new ArpBoard( arpBoardContainer );
 
-arpBoard0.setArpeggio([0,4,7,0,4,7,0,7]);
+arpButtons[0].select();
 
 // -------------------------- synth -------------------------- //
 

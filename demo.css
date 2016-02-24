@@ -123,5 +123,17 @@ body {
 
 .arp-button {
   display: inline-block;
-  margin: 0 20px 20px 0;
+  margin: 0 10px 10px 0;
+  border: 3px solid #1D1D1D;
+  border-radius: 5px;
+  background: #1D1D1D;
+}
+
+.arp-button canvas {
+  display: block;
+}
+
+.arp-button.is-selected {
+  border-color: #DDD;
+  background: black;
 }

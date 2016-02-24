@@ -1,3 +1,5 @@
+/* globals arpBoard0 */
+
 var toneCount = 12;
 var cellWidth = 8;
 var cellHeight = 6;
@@ -26,8 +28,8 @@ function ArpButton( parent, arp ) {
   // event
   var _this = this;
   this.element.onclick = function() {
-    arpBoard0.setArpeggio( _this.arpeggio );
-  }
+    _this.select();
+  };
 }
 
 var proto = ArpButton.prototype;
@@ -57,4 +59,13 @@ proto.render = function() {
 proto.renderBar = function( i, color ) {
   this.ctx.fillStyle = color;
   this.ctx.fillRect( 0, i * cellHeight, this.canvasWidth, cellHeight );
+};
+
+proto.select = function() {
+  arpBoard0.setArpeggio( this.arpeggio );
+  var selected = this.element.parentNode.querySelector('.is-selected');
+  if ( selected ) {
+    selected.classList.remove('is-selected');
+  }
+  this.element.classList.add('is-selected');
 };
