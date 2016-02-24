@@ -25,6 +25,7 @@ proto.create = function() {
 
   this.parent.appendChild( this.element );
   this.element.addEventListener( 'click', this );
+  this.element.addEventListener( 'mousedown', this );
 };
 
 proto.createColumn = function( columnIndex ) {
@@ -59,25 +60,53 @@ proto.handleEvent = function( event ) {
 };
 
 proto.onclick = function( event ) {
-  // only
+  // only cell clicks
   if ( !event.target.classList.contains('arp-board__cell') ) {
     return;
   }
-  var colIndex = parseInt( event.target.parentNode.getAttribute('data-column'), 10 );
-  var value = event.target.getAttribute('data-value');
-  value = value == 'rest' ? value : parseInt( value, 10 );
-  this.setSelectedCell( colIndex, value );
-  this.arpeggio[ colIndex ] = value;
+  this.setSelectedCell( event.target );
 };
+
+proto.onmousedown = function( event ) {
+  if ( !event.target.classList.contains('arp-board__cell') ) {
+    return;
+  }
+  event.preventDefault();
+  this.setSelectedCell( event.target );
+  this.element.addEventListener( 'mouseover', this );
+  window.addEventListener( 'mouseup', this );
+};
+
+proto.onmouseover = function( event ) {
+  if ( !event.target.classList.contains('arp-board__cell') ) {
+    return;
+  }
+  this.setSelectedCell( event.target );
+};
+
+proto.onmouseup = function() {
+  this.element.removeEventListener( 'mouseover', this );
+  window.removeEventListener( 'mouseup', this );
+};
+
+// -----  ----- //
 
 proto.setArpeggio = function( arp ) {
   this.arpeggio = arp;
   this.arpeggio.forEach( function( noteIndex, i ) {
-    this.setSelectedCell( i, noteIndex );
+    this.setSelectedCellClass( i, noteIndex );
   }, this );
 };
 
-proto.setSelectedCell = function( colIndex, value ) {
+proto.setSelectedCell = function( cell ) {
+  var colIndex = parseInt( cell.parentNode.getAttribute('data-column'), 10 );
+  var value = cell.getAttribute('data-value');
+  value = value == 'rest' ? value : parseInt( value, 10 );
+  this.setSelectedCellClass( colIndex, value );
+  this.arpeggio[ colIndex ] = value;
+};
+
+proto.setSelectedCellClass = function( colIndex, value ) {
   var column = this.columns[ colIndex ];
   var offCell = column.querySelector('.is-selected');
   var onCell = column.querySelector( '.' + arpBoardClass + '__cell--' + value );

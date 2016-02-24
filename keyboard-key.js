@@ -40,7 +40,6 @@ proto.setNote = function( note ) {
     index = parseInt( index, 10 );
     var noteName = getNoteFromNumber( index + noteIndex );
     var freq = getFrequency( noteName, this.voice.octaveOffset );
-    // tone.osc.frequency.value = freq;
     tone.osc.frequency.setValueAtTime( freq, now );
   }
 };
