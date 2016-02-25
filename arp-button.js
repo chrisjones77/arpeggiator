@@ -1,4 +1,4 @@
-/* globals arpBoard0 */
+/* globals arpBoard0, arpButtonList, addArpButton */
 
 var toneCount = 12;
 var cellWidth = 8;
@@ -12,7 +12,9 @@ var colors = {
   octaveTone: 'hsla(0, 0%, 100%, 0.2)'
 };
 
-function ArpButton( parent, arp ) {
+
+
+function ArpButton( arp, isCustom ) {
   this.element = document.createElement('div');
   this.element.className = 'arp-button';
   this.canvas = document.createElement('canvas');
@@ -22,14 +24,14 @@ function ArpButton( parent, arp ) {
   this.canvasHeight = this.canvas.height = cellHeight * toneCount;
   this.arpeggio = arp || [0,0,0,0,0,0,0,0];
   this.render();
-  this.element.appendChild( this.canvas );
-  parent.appendChild( this.element );
+  if ( isCustom ) {
+    this.makeCustom();
+  }
 
-  // event
-  var _this = this;
-  this.element.onclick = function() {
-    _this.select();
-  };
+  this.element.appendChild( this.canvas );
+  arpButtonList.insertBefore( this.element, addArpButton );
+  // events
+  this.element.onclick = this.onClick.bind( this );
 }
 
 var proto = ArpButton.prototype;
@@ -56,16 +58,27 @@ proto.render = function() {
   }, this );
 };
 
+proto.makeCustom = function() {
+  this.deleteButton = document.createElement('button');
+  this.deleteButton.className = 'arp-button__delete-button';
+  this.deleteButton.textContent = '✖';
+  this.element.appendChild( this.deleteButton );
+};
+
 proto.renderBar = function( i, color ) {
   this.ctx.fillStyle = color;
   this.ctx.fillRect( 0, i * cellHeight, this.canvasWidth, cellHeight );
 };
 
+proto.onClick = function( event ) {
+  if ( this.deleteButton && event.target == this.deleteButton ) {
+    this.element.parentNode.removeChild( this.element );
+  }
+  this.select();
+};
+
 proto.select = function() {
   arpBoard0.setArpeggio( this.arpeggio );
-  var selected = this.element.parentNode.querySelector('.is-selected');
-  if ( selected ) {
-    selected.classList.remove('is-selected');
-  }
-  this.element.classList.add('is-selected');
 };
+
+

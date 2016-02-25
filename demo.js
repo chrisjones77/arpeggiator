@@ -13,12 +13,10 @@ var defaultArps = [
   [0,1,0,2,0,-1,0,4],
 ];
 
-var arpButtonList = document.querySelector('.arp-button-list');
-
 var arpButtons = [];
 
 defaultArps.forEach( function( arp ) {
-  var arpButton = new ArpButton( arpButtonList, arp );
+  var arpButton = new ArpButton( arp );
   arpButtons.push( arpButton );
 })
 
@@ -29,6 +27,15 @@ var arpBoardContainer = document.querySelector('.arp-board-container');
 var arpBoard0 = new ArpBoard( arpBoardContainer );
 
 arpButtons[0].select();
+
+// -------------------------- addArpButton -------------------------- //
+
+
+addArpButton.onclick = function() {
+  var arpButton = new ArpButton( arpBoard0.arpeggio, true );
+  arpButtons.push( arpButton );
+};
+
 
 // -------------------------- synth -------------------------- //
 

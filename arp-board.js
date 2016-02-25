@@ -92,7 +92,7 @@ proto.onmouseup = function() {
 // -----  ----- //
 
 proto.setArpeggio = function( arp ) {
-  this.arpeggio = arp;
+  this.arpeggio = arp.slice(0);
   this.arpeggio.forEach( function( noteIndex, i ) {
     this.setSelectedCellClass( i, noteIndex );
   }, this );
