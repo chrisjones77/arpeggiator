@@ -1,8 +1,8 @@
 /* globals arpBoard0, arpButtonList, addArpButton */
 
 var toneCount = 12;
-var cellWidth = 8;
-var cellHeight = 6;
+var cellWidth = 7;
+var cellHeight = 5;
 
 var colors = {
   active: '#8AF',
@@ -12,7 +12,7 @@ var colors = {
   octaveTone: 'hsla(0, 0%, 100%, 0.2)'
 };
 
-
+var arpButtonList = document.querySelector('.arp-button-list');
 
 function ArpButton( arp, isCustom ) {
   this.element = document.createElement('div');
@@ -22,14 +22,14 @@ function ArpButton( arp, isCustom ) {
   // 8 x 12
   this.canvasWidth = this.canvas.width = cellWidth * 8;
   this.canvasHeight = this.canvas.height = cellHeight * toneCount;
-  this.arpeggio = arp || [0,0,0,0,0,0,0,0];
+  this.arpeggio = arp.slice(0) || [0,0,0,0,0,0,0,0];
   this.render();
   if ( isCustom ) {
     this.makeCustom();
   }
 
   this.element.appendChild( this.canvas );
-  arpButtonList.insertBefore( this.element, addArpButton );
+  arpButtonList.appendChild( this.element );
   // events
   this.element.onclick = this.onClick.bind( this );
 }

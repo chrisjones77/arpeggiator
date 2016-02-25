@@ -10,7 +10,7 @@ var defaultArps = [
   [0,3,5,7,3,0,5,7],
   [7,6,4,1,7,6,4,1],
   [0,-2,0,-2,0,4,0,4],
-  [0,1,0,2,0,-1,0,4],
+  [7,5,3,0,-2,0,3,5],
 ];
 
 var arpButtons = [];
@@ -18,8 +18,7 @@ var arpButtons = [];
 defaultArps.forEach( function( arp ) {
   var arpButton = new ArpButton( arp );
   arpButtons.push( arpButton );
-})
-
+});
 
 // -------------------------- arp boards -------------------------- //
 
@@ -30,12 +29,16 @@ arpButtons[0].select();
 
 // -------------------------- addArpButton -------------------------- //
 
+var addArpButton = document.createElement('button');
+addArpButton.className = 'add-arp-button';
+addArpButton.textContent = 'Add to list';
 
 addArpButton.onclick = function() {
   var arpButton = new ArpButton( arpBoard0.arpeggio, true );
   arpButtons.push( arpButton );
 };
 
+arpBoardContainer.appendChild( addArpButton );
 
 // -------------------------- synth -------------------------- //
 
