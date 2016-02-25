@@ -35,7 +35,9 @@ proto.play = function() {
 };
 
 proto.stop = function() {
-  this.rampGain( 0, settings.releaseTime );
+  // full release will cover 7 beats
+  var release = settings.releaseTime * settings.beatTime / 1000 * 7;
+  this.rampGain( 0, release );
 };
 
 // ----- rampGain ----- //

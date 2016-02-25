@@ -78,8 +78,7 @@ onAttackRangeInput();
 
 var releaseRange = document.querySelector('.release-range');
 var onReleaseRangeInput = releaseRange.oninput = function() {
-  var value = parseFloat( releaseRange.value );
-  settings.releaseTime = value * value * 2; // parabolic 2 seconds
+  settings.releaseTime = parseFloat( releaseRange.value );
 };
 
 onReleaseRangeInput();
