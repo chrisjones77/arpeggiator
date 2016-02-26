@@ -25,7 +25,14 @@ defaultArps.forEach( function( arp ) {
 var arpBoardContainer = document.querySelector('.arp-board-container');
 var arpBoard0 = new ArpBoard( arpBoardContainer );
 
-arpButtons[0].select();
+arpBoard0.onArpeggioSet = function() {
+  localStorage.setItem( 'arpeggio', JSON.stringify( arpBoard0.arpeggio ) );
+};
+
+// set initial arpeggio
+var initArp = localStorage.getItem('arpeggio');
+initArp = initArp ? JSON.parse( initArp ) : defaultArps[0];
+arpBoard0.setArpeggio( initArp );
 
 // -------------------------- addArpButton -------------------------- //
 

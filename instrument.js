@@ -1,4 +1,4 @@
-/* globals keyCodeNotes, Voice, arpBoard0, getNoteIndex, getNoteFromNumber, modulo */
+/* globals keyCodeNotes, Voice, arpBoard0, getNoteIndex, getNoteFromNumber, modulo, keyboardElem */
 
 var AudioCtx = window.AudioContext || window.webkitAudioContext;
 
@@ -18,6 +18,10 @@ function Instrument() {
   this.startBeats();
   // hash of down notes
   this.downNotes = {};
+
+  keyboardElem.addEventListener( 'mousedown', this.onKeyboardMousedown.bind( this ) );
+  this._onKeyboardMouseover = this.onKeyboardMouseover.bind( this );
+  this._onKeyboardMouseup = this.onKeyboardMouseup.bind( this );
 }
 
 var proto = Instrument.prototype;
@@ -46,6 +50,10 @@ proto.onkeyup = function( event ) {
   if ( event.keyCode == 91 ) {
     this.isCmdDown = false;
   }
+  // don't stop pointer key
+  if ( event.keyCode == this.pointerDownKeyCode ) {
+    return;
+  }
   this.keyUp( event.keyCode );
 };
 
@@ -53,6 +61,7 @@ proto.onkeyup = function( event ) {
 
 proto.keyDown = function( keyCode ) {
   var noteName = keyCodeNotes[ keyCode ];
+  // bail if not note, or of already down
   if ( !noteName ) {
     return;
   }
@@ -62,6 +71,7 @@ proto.keyDown = function( keyCode ) {
   });
   // add flag
   this.downNotes[ noteName ] = true;
+  this.addPlayingClasses();
 };
 
 proto.keyUp = function( keyCode ) {
@@ -76,11 +86,48 @@ proto.keyUp = function( keyCode ) {
   delete this.downNotes[ noteName ];
 };
 
-var keyboardElem = document.querySelector('.keyboard');
-
 function changeKeyElemDown( keyCode, method ) {
   var keyElem = keyboardElem.querySelector( '.keyboard__key--' + keyCode );
   keyElem.classList[ method ]('is-down');
+}
+
+proto.onKeyboardMousedown = function( event ) {
+  var keyCode = getPointerKeyCode( event.target );
+  if ( !keyCode ) {
+    return;
+  }
+  event.preventDefault();
+  this.keyDown( keyCode );
+  // keep track
+  this.pointerDownKeyCode = keyCode;
+  keyboardElem.addEventListener( 'mouseover', this._onKeyboardMouseover );
+  window.addEventListener( 'mouseup', this._onKeyboardMouseup );
+};
+
+proto.onKeyboardMouseover = function( event ) {
+  var keyCode = getPointerKeyCode( event.target );
+  if ( !keyCode ) {
+    return;
+  }
+  this.keyUp( this.pointerDownKeyCode );
+  this.keyDown( keyCode );
+  this.pointerDownKeyCode = keyCode;
+};
+
+proto.onKeyboardMouseup = function() {
+  this.keyUp( this.pointerDownKeyCode );
+  delete this.pointerDownKeyCode;
+  keyboardElem.removeEventListener( 'mouseover', this._onKeyboardMouseover );
+  window.removeEventListener( 'mouseup', this._onKeyboardMouseup );
+};
+
+function getPointerKeyCode( elem ) {
+  if ( elem.nodeName != 'KBD' ) {
+    return;
+  }
+  // get keycode from class, hacky but I don't want to type it in again
+  var keyCode = elem.className.match( /keyboard__key--(\d+)/ );
+  return keyCode && keyCode[1];
 }
 
 // ----- addVoice ----- //

@@ -96,7 +96,11 @@ proto.setArpeggio = function( arp ) {
   this.arpeggio.forEach( function( noteIndex, i ) {
     this.setSelectedCellClass( i, noteIndex );
   }, this );
+  this.onArpeggioSet();
 };
+
+// placeholder, lazy event
+proto.onArpgeggioSet = function() {};
 
 proto.setSelectedCell = function( cell ) {
   var colIndex = parseInt( cell.parentNode.getAttribute('data-column'), 10 );
@@ -104,6 +108,8 @@ proto.setSelectedCell = function( cell ) {
   value = value == 'rest' ? value : parseInt( value, 10 );
   this.setSelectedCellClass( colIndex, value );
   this.arpeggio[ colIndex ] = value;
+  this.setArpeggio( this.arpeggio );
+  this.onArpeggioSet();
 };
 
 proto.setSelectedCellClass = function( colIndex, value ) {

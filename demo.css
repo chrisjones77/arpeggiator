@@ -26,6 +26,11 @@ body {
   background: #333;
 }
 
+.keyboard__key:hover {
+  background: #555;
+  cursor: pointer;
+}
+
 .keyboard__key.is-playing {
   background: #555;
   border-color: #555;
