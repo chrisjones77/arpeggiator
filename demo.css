@@ -161,22 +161,21 @@ body {
   height: 24px;
   border-radius: 12px;
   border: none;
-  color: white;
-  background: #D00;
-  opacity: 0;
+  color: #888;
+  background: #888;
   font-size: 14px;
   transform: scale(0.5);
-  transition: opacity 0.2s, transform 0.2s;
+  transition: transform 0.2s;
   cursor: pointer;
 }
 
 .arp-button:hover .arp-button__delete-button {
-  opacity: 1;
+  color: white;
   transform: scale(1);
 }
 
 .arp-button__delete-button:hover {
-  background: #A00;
+  background: #D00;
 }
 
 /* ---- add-arp-button --- */

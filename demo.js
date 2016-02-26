@@ -72,14 +72,14 @@ synth.addVoice({
   detune: -5
 });
 
-var filter = synth.createFilter();
-filter.type = 'lowpass';
-filter.Q.value = 2;
+var filterA = synth.createFilter();
+var filterB = synth.createFilter();
+filterA.type = 'lowpass';
+filterB.type = 'lowpass';
 
-synth.output.connect( filter );
-
-var end = filter;
-
+synth.output.connect( filterA );
+filterA.connect( filterB );
+var end = filterB;
 end.connect( synth.destination );
 
 // -------------------------- option inputs -------------------------- //
@@ -98,13 +98,24 @@ var onReleaseRangeInput = releaseRange.oninput = function() {
 
 onReleaseRangeInput();
 
-var filterFreqRange = document.querySelector('.filter-freq-range');
-var onFilterFreqRangeInput = filterFreqRange.oninput = function() {
-  var value = parseFloat( filterFreqRange.value );
-  filter.frequency.value = value * value * 20000;
+var filterRange = document.querySelector('.filter-range');
+var onFilterRangeInput = filterRange.oninput = function() {
+  var value = parseFloat( filterRange.value );
+  filterA.frequency.value = value * value * 20000;
+  filterB.frequency.value = value * value * 20000;
 };
+onFilterRangeInput();
 
-onFilterFreqRangeInput();
+
+var resRange = document.querySelector('.res-range');
+var onResRangeInput = resRange.oninput = function() {
+  var res = parseFloat( resRange.value );
+  // ^4 * 20 + 1 for some reason, from https://www.resistorsings.com/106/
+  res = res * res * res * res * 15 + 1;
+  filterA.Q.value = res;
+  filterB.Q.value = res;
+};
+onResRangeInput();
 
 var bpmRange = document.querySelector('.bpm-range');
 var onBpmRangeInput = bpmRange.oninput = function() {
@@ -139,9 +150,9 @@ end.connect( analyzer );
 
 analyzer.minDecibels = -90;
 analyzer.maxDecibels = -10;
-analyzer.smoothingTimeConstant = 0.85;
+analyzer.smoothingTimeConstant = 0.8;
 
-analyzer.fftSize = 512;
+analyzer.fftSize = 256;
 var bufferLength = analyzer.frequencyBinCount;
 var dataArray = new Uint8Array( bufferLength );
 
