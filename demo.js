@@ -1,4 +1,4 @@
-/* globals Instrument, ArpBoard, ArpButton */
+/* globals Instrument, ArpBoard, ArpButton, customArps, saveCustomArps */
 
 // -------------------------- arp buttons -------------------------- //
 
@@ -17,6 +17,11 @@ var arpButtons = [];
 
 defaultArps.forEach( function( arp ) {
   var arpButton = new ArpButton( arp );
+  arpButtons.push( arpButton );
+});
+
+customArps.forEach( function( arp ) {
+  var arpButton = new ArpButton( arp, true );
   arpButtons.push( arpButton );
 });
 
@@ -41,8 +46,11 @@ addArpButton.className = 'add-arp-button';
 addArpButton.textContent = 'Add to list';
 
 addArpButton.onclick = function() {
-  var arpButton = new ArpButton( arpBoard0.arpeggio, true );
+  var arp = arpBoard0.arpeggio;
+  var arpButton = new ArpButton( arp, true );
   arpButtons.push( arpButton );
+  customArps.push( arp );
+  saveCustomArps();
 };
 
 arpBoardContainer.appendChild( addArpButton );

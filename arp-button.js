@@ -1,4 +1,4 @@
-/* globals arpBoard0, arpButtonList, addArpButton */
+/* globals arpBoard0, customArps, saveCustomArps */
 
 var toneCount = 12;
 var cellWidth = 7;
@@ -53,6 +53,7 @@ proto.render = function() {
 
   ctx.fillStyle = colors.active;
   this.arpeggio.forEach( function( toneIndex, i ) {
+    toneIndex = toneIndex == 'rest' ? -4 : toneIndex;
     var y = ( toneIndex *-1 + 7 ) * cellHeight;
     ctx.fillRect( i * cellWidth, y, cellWidth, cellHeight );
   }, this );
@@ -72,7 +73,8 @@ proto.renderBar = function( i, color ) {
 
 proto.onClick = function( event ) {
   if ( this.deleteButton && event.target == this.deleteButton ) {
-    this.element.parentNode.removeChild( this.element );
+    this.remove();
+    return;
   }
   this.select();
 };
@@ -81,4 +83,22 @@ proto.select = function() {
   arpBoard0.setArpeggio( this.arpeggio );
 };
 
+proto.remove = function() {
+  this.element.parentNode.removeChild( this.element );
+  // remove arp
+  var arpString = this.arpeggio.join(',');
+  for ( var i=0; i < customArps.length; i++ ) {
+    var arp = customArps[i];
+    if ( arp.join(',') == arpString ) {
+      customArps.splice( i, 1 );
+    }
+  }
+  saveCustomArps();
+};
 
+function removeFrom( ary, obj ) {
+  var index = ary.indexOf( obj );
+  if ( index != -1 ) {
+    ary.splice( index, 1 );
+  }
+}
