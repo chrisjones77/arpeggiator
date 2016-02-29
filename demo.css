@@ -4,6 +4,18 @@ body {
   color: white;
 }
 
+.top-info {
+  color: #888;
+}
+
+a {
+  color: #09F;
+  text-decoration: none;
+}
+
+
+a:hover { color: #C25; }
+
 .keyboard__row {
   display: flex;
 }
