@@ -5,12 +5,12 @@ I wanted my own arpeggiator after hearing [these M83](https://www.youtube.com/wa
 + Create a tone sequence, then play that sequence relative to a key
 + Save sequences to list. Uses localStorage to save over browser sessions
 + Adjust multiple options
-  - **Attack** - time for tone to reach full volume
+  - **Attack** - time tone reachs full volume
   - **Hold** - time tone plays within its beat
-  - **Release** - time fot tone to reach 0 volume after stopped
-  - **Filter** - cutoffs frequencies
+  - **Release** - time tone reaches 0 volume after stopped
+  - **Filter** - cut offs frequencies
   - **Resonance** - increase harmonic frequencies around cutoff
-  - **Speed** - speed of arpeggio played
+  - **Speed** - speed of playing arpeggio
   - **Shape** - sound wave shape of the oscillator: square, sawtooth, triangle, & sine
 
 Made with [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
